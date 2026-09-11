@@ -1,27 +1,38 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>上下班交通费用记录</title>
+<title>饼饼上下班交通记录</title>
 
 <link rel="stylesheet" href="style.css">
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
-<h1>🚕 上下班交通记录</h1>
 
+<div class="header">
 
-<div class="card">
+<h1>
+🚕 饼饼上下班交通记录
+</h1>
+
 
 <div id="date"></div>
 
+<div id="week"></div>
+
 <div id="clock"></div>
+
 
 </div>
 
@@ -29,36 +40,42 @@
 
 <div class="card">
 
-<h3>出行类型</h3>
+<h3>🚦 出行类型</h3>
 
 
 <div class="buttons">
 
+
 <button onclick="setType('上午上班')">
-上午上班
+🌅 上午上班
 </button>
 
 
 <button onclick="setType('下午下班')">
-下午下班
+🌙 下午下班
 </button>
 
 
 </div>
 
 
-<p id="typeShow">
+<div class="selected" id="typeShow">
+
 请选择类型
-</p>
 
 </div>
+
+
+</div>
+
+
 
 
 
 <div class="card">
 
 
-<h3>交通方式</h3>
+<h3>🚗 交通方式</h3>
 
 
 <select id="method">
@@ -78,7 +95,8 @@
 
 
 
-<h3>金额</h3>
+
+<h3>💰 金额</h3>
 
 
 <input 
@@ -101,9 +119,15 @@ onclick="saveData()">
 
 
 
-<div class="card">
 
-<h2>📊 本周统计</h2>
+<div class="statistics">
+
+
+<div class="stat card">
+
+<h3>
+📊 本周
+</h3>
 
 <div id="weekTotal"></div>
 
@@ -111,32 +135,47 @@ onclick="saveData()">
 
 
 
+<div class="stat card">
 
-<div class="card">
-
-<h2>📅 本月统计</h2>
+<h3>
+📅 本月
+</h3>
 
 <div id="monthTotal"></div>
 
 </div>
 
 
+</div>
+
+
+
+
 
 
 <div class="card">
 
-<h2>📋 历史记录</h2>
+
+<h2>
+📋 历史记录
+</h2>
+
 
 <div id="list"></div>
 
+
 </div>
 
 
+
+
 </div>
+
 
 
 <script src="app.js"></script>
 
 
 </body>
+
 </html>

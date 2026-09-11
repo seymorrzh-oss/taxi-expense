@@ -20,6 +20,49 @@ function updateClock(){
 let d=new Date();
 
 
+let option={
+timeZone:"Asia/Tokyo"
+};
+
+
+
+document.getElementById("date").innerHTML=
+
+d.toLocaleDateString(
+"zh-CN",
+option
+);
+
+
+
+document.getElementById("week").innerHTML=
+
+"星期"+
+"日一二三四五六"[
+new Date(
+d.toLocaleString(
+"en-US",
+option
+)
+).getDay()
+];
+
+
+
+document.getElementById("clock").innerHTML=
+
+d.toLocaleTimeString(
+"zh-CN",
+option
+);
+
+
+}
+
+
+let d=new Date();
+
+
 
 let option={
 timeZone:"Asia/Tokyo"
