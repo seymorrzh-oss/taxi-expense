@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>上下班交通费用记录</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🚕 上下班交通记录</h1>
+
+
+<div class="card">
+
+<div id="date"></div>
+
+<div id="clock"></div>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>出行类型</h3>
+
+
+<div class="buttons">
+
+<button onclick="setType('上午上班')">
+上午上班
+</button>
+
+
+<button onclick="setType('下午下班')">
+下午下班
+</button>
+
+
+</div>
+
+
+<p id="typeShow">
+请选择类型
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+
+<h3>交通方式</h3>
+
+
+<select id="method">
+
+<option>滴滴</option>
+
+<option>花小猪</option>
+
+<option>高德打车</option>
+
+<option>百度打车</option>
+
+<option>公交车</option>
+
+
+</select>
+
+
+
+<h3>金额</h3>
+
+
+<input 
+id="money"
+type="number"
+step="0.01"
+placeholder="请输入金额">
+
+
+<button class="save"
+onclick="saveData()">
+
+保存记录
+
+</button>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+<h2>📊 本周统计</h2>
+
+<div id="weekTotal"></div>
+
+</div>
+
+
+
+
+<div class="card">
+
+<h2>📅 本月统计</h2>
+
+<div id="monthTotal"></div>
+
+</div>
+
+
+
+
+<div class="card">
+
+<h2>📋 历史记录</h2>
+
+<div id="list"></div>
+
+</div>
+
+
+</div>
+
+
+<script src="app.js"></script>
+
+
+</body>
+</html>
