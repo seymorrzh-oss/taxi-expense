@@ -16,79 +16,62 @@ document.getElementById("typeShow").innerHTML=
 
 function updateClock(){
 
+let now = new Date();
 
-let d=new Date();
 
-
-let option={
+let tokyo = new Date(
+now.toLocaleString(
+"en-US",
+{
 timeZone:"Asia/Tokyo"
-};
-
-
-
-document.getElementById("date").innerHTML=
-
-d.toLocaleDateString(
-"zh-CN",
-option
+}
+)
 );
 
 
 
-document.getElementById("week").innerHTML=
+document.getElementById("date").innerHTML =
+tokyo.getFullYear()
++
+"年"
++
+(tokyo.getMonth()+1)
++
+"月"
++
+tokyo.getDate()
++
+"日";
 
-"星期"+
-"日一二三四五六"[
-new Date(
-d.toLocaleString(
-"en-US",
-option
-)
-).getDay()
+
+
+let weekArr=[
+"星期日",
+"星期一",
+"星期二",
+"星期三",
+"星期四",
+"星期五",
+"星期六"
 ];
 
 
+document.getElementById("week").innerHTML =
+weekArr[tokyo.getDay()];
 
-document.getElementById("clock").innerHTML=
 
-d.toLocaleTimeString(
+
+document.getElementById("clock").innerHTML =
+
+tokyo.toLocaleTimeString(
 "zh-CN",
-option
+{
+hour12:false
+}
 );
 
 
 }
-
-
-let d=new Date();
-
-
-
-let option={
-timeZone:"Asia/Tokyo"
-};
-
-
-
-document.getElementById("date").innerHTML=
-
-d.toLocaleDateString(
-"zh-CN",
-option
-);
-
-
-
-document.getElementById("clock").innerHTML=
-
-d.toLocaleTimeString(
-"zh-CN",
-option
-);
-
-
-}
-
 
 setInterval(updateClock,1000);
 
