@@ -1,69 +1,104 @@
 let type = "";
 
 
-// ==============================
-// 北京时间 UTC+8
-// ==============================
+/* ==========================
+   北京时间 UTC+8
+========================== */
 
 function getBeijingTime() {
 
-    let now = new Date();
+    const now = new Date();
 
-    let utc =
+    const utc =
         now.getTime() +
         now.getTimezoneOffset() * 60000;
 
     return new Date(
         utc + 8 * 60 * 60 * 1000
     );
-
 }
 
 
+/* ==========================
+   读取数据
+========================== */
 
-// ==============================
-// 选择上班 / 下班
-// ==============================
+function getData() {
+
+    try {
+
+        const data =
+            JSON.parse(
+                localStorage.getItem("taxiData") || "[]"
+            );
+
+        return Array.isArray(data)
+            ? data
+            : [];
+
+    } catch (error) {
+
+        console.error(
+            "读取交通记录失败：",
+            error
+        );
+
+        return [];
+    }
+}
+
+
+/* ==========================
+   保存数据
+========================== */
+
+function saveAllData(data) {
+
+    localStorage.setItem(
+        "taxiData",
+        JSON.stringify(data)
+    );
+}
+
+
+/* ==========================
+   选择出行类型
+========================== */
 
 function setType(t) {
 
     type = t;
 
-    let box =
+    const box =
         document.getElementById("typeShow");
 
     if (box) {
 
         box.innerHTML =
             "已选择：" + t;
-
     }
-
 }
 
 
-
-// ==============================
-// 更新时间
-// ==============================
+/* ==========================
+   显示北京时间
+========================== */
 
 function updateClock() {
 
-    let beijing =
+    const beijing =
         getBeijingTime();
 
-
-    let y =
+    const y =
         beijing.getFullYear();
 
-    let m =
+    const m =
         beijing.getMonth() + 1;
 
-    let d =
+    const d =
         beijing.getDate();
 
-
-    let weeks = [
+    const weeks = [
         "星期日",
         "星期一",
         "星期二",
@@ -74,13 +109,13 @@ function updateClock() {
     ];
 
 
-    let dateBox =
+    const dateBox =
         document.getElementById("date");
 
-    let weekBox =
+    const weekBox =
         document.getElementById("week");
 
-    let clockBox =
+    const clockBox =
         document.getElementById("clock");
 
 
@@ -90,7 +125,6 @@ function updateClock() {
             y + "年" +
             m + "月" +
             d + "日";
-
     }
 
 
@@ -98,25 +132,22 @@ function updateClock() {
 
         weekBox.innerHTML =
             weeks[beijing.getDay()];
-
     }
 
 
     if (clockBox) {
 
-        let hh =
+        const hh =
             String(
                 beijing.getHours()
             ).padStart(2, "0");
 
-
-        let mm =
+        const mm =
             String(
                 beijing.getMinutes()
             ).padStart(2, "0");
 
-
-        let ss =
+        const ss =
             String(
                 beijing.getSeconds()
             ).padStart(2, "0");
@@ -126,9 +157,7 @@ function updateClock() {
             hh + ":" +
             mm + ":" +
             ss;
-
     }
-
 }
 
 
@@ -140,33 +169,33 @@ setInterval(
 updateClock();
 
 
-
-// ==============================
-// 保存记录
-// ==============================
+/* ==========================
+   保存新记录
+========================== */
 
 function saveData() {
 
-    let money =
-        document.getElementById(
-            "money"
-        ).value;
+    const moneyInput =
+        document.getElementById("money");
+
+    const methodInput =
+        document.getElementById("method");
 
 
-    let method =
-        document.getElementById(
-            "method"
-        ).value;
+    const money =
+        moneyInput.value;
+
+    const method =
+        methodInput.value;
 
 
     if (type === "") {
 
         alert(
-            "请选择上午上班或下午下班"
+            "请选择上午上班、下午下班或周末出游"
         );
 
         return;
-
     }
 
 
@@ -180,23 +209,14 @@ function saveData() {
         );
 
         return;
-
     }
 
 
-    let beijing =
+    const beijing =
         getBeijingTime();
 
 
-    let record = {
-
-        id:
-            Date.now() +
-            "_" +
-            Math.random()
-                .toString(36)
-                .substring(2, 8),
-
+    const record = {
 
         date:
             beijing.getFullYear() +
@@ -208,7 +228,6 @@ function saveData() {
             String(
                 beijing.getDate()
             ).padStart(2, "0"),
-
 
         time:
             String(
@@ -223,67 +242,49 @@ function saveData() {
                 beijing.getSeconds()
             ).padStart(2, "0"),
 
+        type:
+            type,
 
-        type: type,
+        method:
+            method,
 
-
-        method: method,
-
-
-        money: Number(money)
-
+        money:
+            Number(money)
     };
 
 
-    let data =
-        JSON.parse(
-            localStorage.getItem(
-                "taxiData"
-            ) || "[]"
-        );
+    const data =
+        getData();
 
 
     data.push(record);
 
 
-    localStorage.setItem(
-        "taxiData",
-        JSON.stringify(data)
-    );
+    saveAllData(data);
 
 
     alert("记录成功");
 
 
-    document.getElementById(
-        "money"
-    ).value = "";
+    moneyInput.value = "";
 
 
     show();
-
 }
 
 
-
-// ==============================
-// 显示历史记录
-// ==============================
+/* ==========================
+   显示历史记录
+========================== */
 
 function show() {
 
-    let data =
-        JSON.parse(
-            localStorage.getItem(
-                "taxiData"
-            ) || "[]"
-        );
+    const data =
+        getData();
 
 
-    let list =
-        document.getElementById(
-            "list"
-        );
+    const list =
+        document.getElementById("list");
 
 
     if (!list) {
@@ -294,7 +295,7 @@ function show() {
     let html = "";
 
 
-    // 顶部操作栏
+    /* 顶部操作栏 */
 
     if (data.length > 0) {
 
@@ -319,84 +320,79 @@ function show() {
                 class="delete-selected"
                 onclick="deleteSelected()"
             >
-
                 删除选中
-
             </button>
 
         </div>
 
         `;
-
     }
 
 
+    /*
+       重点：
+       不再使用 ID。
+       直接使用记录在数组中的 index。
+    */
 
-    // 最新记录放在最上面
+    for (
+        let index = data.length - 1;
+        index >= 0;
+        index--
+    ) {
 
-    data
-        .slice()
-        .reverse()
-        .forEach(function(i) {
-
-
-            html += `
-
-            <div class="record">
-
-                <div class="record-select">
-
-                    <input
-                        type="checkbox"
-                        class="record-checkbox"
-                        data-id="${i.id}"
-                    >
-
-                </div>
+        const item =
+            data[index];
 
 
-                <div class="record-content">
+        html += `
 
-                    <div class="record-date">
+        <div class="record">
 
-                        ${i.date}
-                        ${i.time}
+            <div class="record-select">
 
-                    </div>
-
-
-                    <div class="record-info">
-
-                        ${i.type}
-                        ·
-                        ${i.method}
-
-                    </div>
-
-
-                    <div class="record-money">
-
-                        ¥${Number(i.money).toFixed(2)}
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    class="delete-one"
-                    onclick="deleteOne('${i.id}')"
+                <input
+                    type="checkbox"
+                    class="record-checkbox"
+                    data-index="${index}"
                 >
-
-                    删除
-
-                </button>
 
             </div>
 
-            `;
 
-        });
+            <div class="record-content">
+
+                <div class="record-date">
+                    ${item.date || ""}
+                    ${item.time || ""}
+                </div>
+
+
+                <div class="record-info">
+                    ${item.type || ""}
+                    ·
+                    ${item.method || ""}
+                </div>
+
+
+                <div class="record-money">
+                    ¥${Number(item.money || 0).toFixed(2)}
+                </div>
+
+            </div>
+
+
+            <button
+                class="delete-one"
+                onclick="deleteOne(${index})"
+            >
+                删除
+            </button>
+
+        </div>
+
+        `;
+    }
 
 
     if (data.length === 0) {
@@ -404,64 +400,73 @@ function show() {
         html += `
 
         <div class="empty">
-
             暂无记录
-
         </div>
 
         `;
-
     }
 
 
-    list.innerHTML = html;
+    list.innerHTML =
+        html;
 
+
+    statistics(data);
 }
 
 
+/* ==========================
+   删除单条记录
+========================== */
 
-// ==============================
-// 删除单条记录
-// ==============================
+function deleteOne(index) {
 
-function deleteOne(id) {
+    const data =
+        getData();
 
-    let data =
-        JSON.parse(
-            localStorage.getItem(
-                "taxiData"
-            ) || "[]"
+
+    index =
+        Number(index);
+
+
+    if (
+        !Number.isInteger(index) ||
+        index < 0 ||
+        index >= data.length
+    ) {
+
+        alert(
+            "没有找到这条记录，请刷新页面后再试。"
         );
 
-
-    let target =
-        data.find(
-            function(item) {
-                return item.id === id;
-            }
-        );
-
-
-    if (!target) {
         return;
     }
 
 
-    let confirmDelete =
+    const target =
+        data[index];
+
+
+    const confirmDelete =
         confirm(
+
             "确定要删除这条记录吗？\n\n" +
-            target.date +
+
+            (target.date || "") +
             " " +
-            target.time +
+            (target.time || "") +
             "\n" +
-            target.type +
+
+            (target.type || "") +
             " · " +
-            target.method +
+            (target.method || "") +
             "\n" +
+
             "¥" +
             Number(
-                target.money
+                target.money || 0
             ).toFixed(2)
+
         );
 
 
@@ -470,33 +475,30 @@ function deleteOne(id) {
     }
 
 
-    data =
-        data.filter(
-            function(item) {
-                return item.id !== id;
-            }
-        );
+    /*
+       直接按照数组位置删除
+    */
 
-
-    localStorage.setItem(
-        "taxiData",
-        JSON.stringify(data)
+    data.splice(
+        index,
+        1
     );
 
 
-    show();
+    saveAllData(data);
 
+
+    show();
 }
 
 
-
-// ==============================
-// 全选 / 取消全选
-// ==============================
+/* ==========================
+   全选
+========================== */
 
 function toggleSelectAll(checkbox) {
 
-    let boxes =
+    const boxes =
         document.querySelectorAll(
             ".record-checkbox"
         );
@@ -510,55 +512,40 @@ function toggleSelectAll(checkbox) {
 
         }
     );
-
 }
 
 
-
-// ==============================
-// 删除选中记录
-// ==============================
+/* ==========================
+   删除选中
+========================== */
 
 function deleteSelected() {
 
-    let boxes =
+    const checkedBoxes =
         document.querySelectorAll(
             ".record-checkbox:checked"
         );
 
 
-    if (boxes.length === 0) {
+    if (
+        checkedBoxes.length === 0
+    ) {
 
         alert(
             "请先选择要删除的记录"
         );
 
         return;
-
     }
 
 
-    let ids = [];
-
-
-    boxes.forEach(
-        function(box) {
-
-            ids.push(
-                box.getAttribute(
-                    "data-id"
-                )
-            );
-
-        }
-    );
-
-
-    let confirmDelete =
+    const confirmDelete =
         confirm(
+
             "确定要删除选中的 " +
-            boxes.length +
+            checkedBoxes.length +
             " 条记录吗？"
+
         );
 
 
@@ -567,45 +554,77 @@ function deleteSelected() {
     }
 
 
-    let data =
-        JSON.parse(
-            localStorage.getItem(
-                "taxiData"
-            ) || "[]"
-        );
+    /*
+       取得所有被选中的数组位置
+    */
+
+    const indexes = [];
 
 
-    data =
-        data.filter(
-            function(item) {
+    checkedBoxes.forEach(
+        function(box) {
 
-                return !ids.includes(
-                    item.id
-                );
+            indexes.push(
+                Number(
+                    box.getAttribute(
+                        "data-index"
+                    )
+                )
+            );
 
-            }
-        );
-
-
-    localStorage.setItem(
-        "taxiData",
-        JSON.stringify(data)
+        }
     );
 
 
-    show();
+    /*
+       从大到小删除。
+       这样删除前面的记录时，
+       不会影响后面的 index。
+    */
 
+    indexes.sort(
+        function(a, b) {
+            return b - a;
+        }
+    );
+
+
+    const data =
+        getData();
+
+
+    indexes.forEach(
+        function(index) {
+
+            if (
+                index >= 0 &&
+                index < data.length
+            ) {
+
+                data.splice(
+                    index,
+                    1
+                );
+            }
+
+        }
+    );
+
+
+    saveAllData(data);
+
+
+    show();
 }
 
 
-
-// ==============================
-// 统计
-// ==============================
+/* ==========================
+   周 / 月统计
+========================== */
 
 function statistics(data) {
 
-    let now =
+    const now =
         getBeijingTime();
 
 
@@ -614,26 +633,26 @@ function statistics(data) {
     let month = 0;
 
 
-
-    // 今天所在周的星期
-
-    let currentDay =
+    const currentDay =
         now.getDay();
 
 
-    // 把星期日当作上一周的最后一天
-    let mondayOffset =
+    const mondayOffset =
         currentDay === 0
             ? 6
             : currentDay - 1;
 
 
-    let monday =
+    const monday =
         new Date(
+
             now.getFullYear(),
+
             now.getMonth(),
+
             now.getDate() -
-                mondayOffset
+            mondayOffset
+
         );
 
 
@@ -645,13 +664,16 @@ function statistics(data) {
     );
 
 
-
     data.forEach(
-        function(i) {
+        function(item) {
+
+            if (!item.date) {
+                return;
+            }
 
 
-            let arr =
-                i.date.split("-");
+            const arr =
+                item.date.split("-");
 
 
             if (arr.length !== 3) {
@@ -659,11 +681,15 @@ function statistics(data) {
             }
 
 
-            let recordDate =
+            const recordDate =
                 new Date(
+
                     Number(arr[0]),
+
                     Number(arr[1]) - 1,
+
                     Number(arr[2])
+
                 );
 
 
@@ -675,57 +701,56 @@ function statistics(data) {
             );
 
 
-            let money =
-                Number(i.money) || 0;
+            const money =
+                Number(item.money) || 0;
 
 
-
-            // 本月
+            /* 本月 */
 
             if (
 
                 recordDate.getFullYear()
-                    ===
+                ===
                 now.getFullYear()
 
                 &&
 
                 recordDate.getMonth()
-                    ===
+                ===
                 now.getMonth()
 
             ) {
 
                 month += money;
-
             }
 
 
-
-            // 本周
+            /* 本周 */
 
             if (
+
                 recordDate >= monday
+
                 &&
+
                 recordDate <= now
+
             ) {
 
                 week += money;
-
             }
 
         }
     );
 
 
-
-    let weekBox =
+    const weekBox =
         document.getElementById(
             "weekTotal"
         );
 
 
-    let monthBox =
+    const monthBox =
         document.getElementById(
             "monthTotal"
         );
@@ -736,7 +761,6 @@ function statistics(data) {
         weekBox.innerHTML =
             "本周交通费用：¥" +
             week.toFixed(2);
-
     }
 
 
@@ -745,15 +769,12 @@ function statistics(data) {
         monthBox.innerHTML =
             "本月交通费用：¥" +
             month.toFixed(2);
-
     }
-
 }
 
 
-
-// ==============================
-// 页面初始化
-// ==============================
+/* ==========================
+   页面启动
+========================== */
 
 show();
