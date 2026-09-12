@@ -5,173 +5,225 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="format-detection"
+    content="telephone=no"
+>
 
 <title>饼饼上下班交通记录</title>
 
-<link rel="stylesheet" href="style.css">
+<link
+    rel="stylesheet"
+    href="style.css"
+>
 
 </head>
 
 
 <body>
 
-
 <div class="container">
 
 
-<div class="header">
+    <!-- ==========================
+         顶部时间
+    =========================== -->
 
-<h1>
-🚕 饼饼上下班交通记录
-</h1>
+    <div class="header">
+
+        <h1>
+            🚕 饼饼上下班交通记录
+        </h1>
+
+        <div id="date"></div>
+
+        <div id="week"></div>
+
+        <div id="clock"></div>
+
+        <div class="timezone">
+            北京时间 · UTC+8
+        </div>
+
+    </div>
 
 
-<div id="date"></div>
 
-<div id="week"></div>
+    <!-- ==========================
+         出行类型
+    =========================== -->
 
-<div id="clock"></div>
+    <div class="card">
+
+        <h3>
+            🚦 出行类型
+        </h3>
+
+
+        <div class="buttons">
+
+            <button
+                onclick="setType('上午上班')"
+            >
+                🌅 上午上班
+            </button>
+
+
+            <button
+                onclick="setType('下午下班')"
+            >
+                🌙 下午下班
+            </button>
+
+
+            <button
+                class="weekend-button"
+                onclick="setType('周末出游')"
+            >
+                🏖️ 周末出游
+            </button>
+
+        </div>
+
+
+        <div
+            class="selected"
+            id="typeShow"
+        >
+            请选择类型
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================
+         交通方式 & 金额
+    =========================== -->
+
+    <div class="card">
+
+        <h3>
+            🚗 交通方式
+        </h3>
+
+
+        <select id="method">
+
+            <option>
+                滴滴
+            </option>
+
+            <option>
+                花小猪
+            </option>
+
+            <option>
+                高德打车
+            </option>
+
+            <option>
+                百度打车
+            </option>
+
+            <option>
+                公交车
+            </option>
+
+        </select>
+
+
+        <h3 class="money-title">
+            💰 金额
+        </h3>
+
+
+        <input
+            id="money"
+            type="number"
+            step="0.01"
+            min="0"
+            inputmode="decimal"
+            placeholder="请输入金额"
+        >
+
+
+        <button
+            class="save"
+            onclick="saveData()"
+        >
+            💾 保存记录
+        </button>
+
+    </div>
+
+
+
+    <!-- ==========================
+         统计
+    =========================== -->
+
+    <div class="statistics">
+
+
+        <div class="stat card">
+
+            <h3>
+                📊 本周
+            </h3>
+
+            <div id="weekTotal">
+                本周交通费用：¥0.00
+            </div>
+
+        </div>
+
+
+        <div class="stat card">
+
+            <h3>
+                📅 本月
+            </h3>
+
+            <div id="monthTotal">
+                本月交通费用：¥0.00
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ==========================
+         历史记录
+    =========================== -->
+
+    <div class="card history-card">
+
+        <h2>
+            📋 历史记录
+        </h2>
+
+
+        <div id="list"></div>
+
+    </div>
 
 
 </div>
 
 
 
-<div class="card">
-
-<h3>🚦 出行类型</h3>
-
-
-<div class="buttons">
-
-
-<button onclick="setType('上午上班')">
-🌅 上午上班
-</button>
-
-
-<button onclick="setType('下午下班')">
-🌙 下午下班
-</button>
-
-
-</div>
-
-
-<div class="selected" id="typeShow">
-
-请选择类型
-
-</div>
-
-
-</div>
-
-
-
-
-
-<div class="card">
-
-
-<h3>🚗 交通方式</h3>
-
-
-<select id="method">
-
-<option>滴滴</option>
-
-<option>花小猪</option>
-
-<option>高德打车</option>
-
-<option>百度打车</option>
-
-<option>公交车</option>
-
-
-</select>
-
-
-
-
-<h3>💰 金额</h3>
-
-
-<input 
-id="money"
-type="number"
-step="0.01"
-placeholder="请输入金额">
-
-
-<button class="save"
-onclick="saveData()">
-
-保存记录
-
-</button>
-
-
-</div>
-
-
-
-
-
-<div class="statistics">
-
-
-<div class="stat card">
-
-<h3>
-📊 本周
-</h3>
-
-<div id="weekTotal"></div>
-
-</div>
-
-
-
-<div class="stat card">
-
-<h3>
-📅 本月
-</h3>
-
-<div id="monthTotal"></div>
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-<div class="card">
-
-
-<h2>
-📋 历史记录
-</h2>
-
-
-<div id="list"></div>
-
-
-</div>
-
-
-
-
-</div>
-
-
+<!-- ==========================
+     JavaScript
+=========================== -->
 
 <script src="app.js"></script>
 

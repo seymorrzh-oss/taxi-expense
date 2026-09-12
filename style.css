@@ -1,417 +1,723 @@
-*{
-box-sizing:border-box;
+/* ==========================
+   全局
+========================== */
+
+* {
+    box-sizing: border-box;
 }
 
 
-body{
-
-margin:0;
-
-background:#f2f4f8;
-
-font-family:
--apple-system,
-BlinkMacSystemFont,
-"Microsoft YaHei";
-
+html {
+    -webkit-text-size-adjust: 100%;
 }
 
 
-.container{
+body {
 
-padding:15px;
+    margin: 0;
 
-max-width:500px;
+    padding: 0;
 
-margin:auto;
+    background: #f2f4f8;
 
-}
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Microsoft YaHei",
+        sans-serif;
 
-
-
-.header{
-
-background:
-linear-gradient(
-135deg,
-#1677ff,
-#70b5ff
-);
-
-color:white;
-
-padding:25px 15px;
-
-border-radius:25px;
-
-text-align:center;
-
-margin-bottom:20px;
-
-box-shadow:
-0 8px 20px rgba(22,119,255,.25);
+    color: #222;
 
 }
 
 
-.header h1{
+/* ==========================
+   主容器
+========================== */
 
-font-size:22px;
+.container {
 
-margin:0 0 15px;
+    width: 100%;
 
-}
+    max-width: 520px;
 
+    margin: 0 auto;
 
-#date{
-
-font-size:18px;
-
-}
-
-
-#week{
-
-font-size:17px;
-
-margin-top:5px;
+    padding: 15px;
 
 }
 
 
-#clock{
+/* ==========================
+   顶部
+========================== */
 
-font-size:28px;
+.header {
 
-font-weight:bold;
+    background:
+        linear-gradient(
+            135deg,
+            #1677ff,
+            #70b5ff
+        );
 
-margin-top:10px;
+    color: white;
 
-}
+    padding: 25px 15px 22px;
 
+    border-radius: 25px;
 
+    text-align: center;
 
+    margin-bottom: 20px;
 
-.card{
-
-background:white;
-
-border-radius:20px;
-
-padding:20px;
-
-margin-bottom:15px;
-
-box-shadow:
-0 5px 15px rgba(0,0,0,.06);
-
-}
-
-
-
-h3{
-
-margin-top:0;
+    box-shadow:
+        0 8px 20px
+        rgba(22, 119, 255, 0.25);
 
 }
 
 
+.header h1 {
 
+    font-size: 22px;
 
+    margin:
+        0 0 15px;
 
-.buttons{
-
-display:flex;
-
-gap:12px;
-
-}
-
-
-button,
-select,
-input{
-
-
-width:100%;
-
-height:48px;
-
-border-radius:15px;
-
-font-size:16px;
-
-border:1px solid #ddd;
-
-margin-top:12px;
+    font-weight: 700;
 
 }
 
 
+#date {
 
-button{
+    font-size: 18px;
 
-background:#1677ff;
-
-color:white;
-
-border:none;
+    font-weight: 500;
 
 }
 
 
-.buttons button{
+#week {
 
-flex:1;
+    font-size: 17px;
 
-}
-
-
-
-.selected{
-
-margin-top:15px;
-
-padding:12px;
-
-background:#f0f7ff;
-
-border-radius:12px;
-
-color:#1677ff;
+    margin-top: 5px;
 
 }
 
 
+#clock {
 
+    font-size: 30px;
 
-.save{
+    font-weight: 700;
 
-background:#07c160;
+    margin-top: 10px;
 
-font-size:18px;
-
-}
-
-
-
-.statistics{
-
-display:flex;
-
-gap:10px;
+    letter-spacing: 1px;
 
 }
 
 
+.timezone {
 
-.stat{
+    font-size: 12px;
 
-flex:1;
+    opacity: 0.8;
 
-text-align:center;
+    margin-top: 5px;
+
+}
+
+
+/* ==========================
+   卡片
+========================== */
+
+.card {
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    margin-bottom: 15px;
+
+    box-shadow:
+        0 5px 15px
+        rgba(0, 0, 0, 0.06);
+
+}
+
+
+.card h3 {
+
+    margin:
+        0 0 12px;
+
+    font-size: 17px;
+
+}
+
+
+.card h2 {
+
+    margin:
+        0 0 15px;
+
+    font-size: 20px;
+
+}
+
+
+/* ==========================
+   出行类型按钮
+========================== */
+
+.buttons {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 12px;
+
+}
+
+
+.buttons button {
+
+    width: 100%;
+
+    height: 48px;
+
+    margin: 0;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: #1677ff;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+}
+
+
+/* ==========================
+   周末出游按钮
+========================== */
+
+.buttons .weekend-button {
+
+    grid-column:
+        1 / -1;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff9f43,
+            #ffbe76
+        );
+
+}
+
+
+/* ==========================
+   按钮点击效果
+========================== */
+
+button:active {
+
+    transform: scale(0.98);
+
+}
+
+
+.buttons button:active {
+
+    opacity: 0.85;
+
+}
+
+
+/* ==========================
+   当前选择
+========================== */
+
+.selected {
+
+    margin-top: 15px;
+
+    padding: 12px;
+
+    background: #f0f7ff;
+
+    border-radius: 12px;
+
+    color: #1677ff;
+
+    font-size: 15px;
+
+    text-align: center;
+
+}
+
+
+/* ==========================
+   下拉菜单
+========================== */
+
+select {
+
+    width: 100%;
+
+    height: 48px;
+
+    border-radius: 15px;
+
+    border:
+        1px solid #ddd;
+
+    background: white;
+
+    padding:
+        0 12px;
+
+    font-size: 16px;
+
+    color: #333;
+
+    outline: none;
+
+}
+
+
+/* ==========================
+   金额
+========================== */
+
+.money-title {
+
+    margin-top: 20px !important;
+
+}
+
+
+input {
+
+    width: 100%;
+
+    height: 48px;
+
+    border-radius: 15px;
+
+    border:
+        1px solid #ddd;
+
+    background: white;
+
+    padding:
+        0 14px;
+
+    font-size: 16px;
+
+    outline: none;
+
+}
+
+
+input:focus,
+select:focus {
+
+    border-color:
+        #1677ff;
+
+}
+
+
+/* ==========================
+   保存按钮
+========================== */
+
+.save {
+
+    width: 100%;
+
+    height: 50px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: #07c160;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    margin-top: 15px;
+
+    cursor: pointer;
+
+}
+
+
+/* ==========================
+   统计
+========================== */
+
+.statistics {
+
+    display: flex;
+
+    gap: 10px;
+
+}
+
+
+.statistics .card {
+
+    flex: 1;
+
+}
+
+
+.stat {
+
+    text-align: center;
+
+    min-width: 0;
+
+}
+
+
+.stat h3 {
+
+    font-size: 16px;
 
 }
 
 
 #weekTotal,
-#monthTotal{
+#monthTotal {
 
-font-size:20px;
+    font-size: 15px;
 
-font-weight:bold;
+    font-weight: bold;
 
-color:#1677ff;
+    color: #1677ff;
 
-}
-
-
-
-#list div{
-
-background:#f8f9fb;
-
-padding:15px;
-
-border-radius:15px;
-
-margin-bottom:10px;
-
-line-height:25px;
+    line-height: 22px;
 
 }
+
+
 /* ==========================
-   历史记录操作
+   历史记录操作栏
 ========================== */
 
-.list-actions{
+.list-actions {
 
-display:flex;
+    display: flex;
 
-align-items:center;
+    align-items: center;
 
-justify-content:space-between;
+    justify-content:
+        space-between;
 
-margin-bottom:15px;
+    margin-bottom: 15px;
 
-padding-bottom:12px;
+    padding-bottom: 12px;
 
-border-bottom:1px solid #eee;
-
-}
-
-
-.list-actions label{
-
-display:flex;
-
-align-items:center;
-
-gap:8px;
-
-font-size:15px;
+    border-bottom:
+        1px solid #eee;
 
 }
 
 
-.list-actions input{
+.list-actions label {
 
-width:20px;
+    display: flex;
 
-height:20px;
+    align-items: center;
 
-margin:0;
+    gap: 8px;
 
-}
-
-
-.delete-selected{
-
-width:auto;
-
-height:38px;
-
-padding:0 14px;
-
-margin:0;
-
-background:#ff4d4f;
-
-font-size:14px;
-
-border-radius:10px;
+    font-size: 15px;
 
 }
 
 
-.record{
+.list-actions input {
 
-display:flex;
+    width: 20px;
 
-align-items:center;
+    height: 20px;
 
-gap:10px;
-
-background:#f8f9fb;
-
-padding:12px;
-
-border-radius:15px;
-
-margin-bottom:10px;
+    margin: 0;
 
 }
 
 
-.record-select{
+/* ==========================
+   删除选中
+========================== */
 
-width:25px;
+.delete-selected {
 
-}
+    width: auto;
 
+    height: 38px;
 
-.record-select input{
+    padding:
+        0 14px;
 
-width:20px;
+    margin: 0;
 
-height:20px;
+    border: none;
 
-margin:0;
+    background: #ff4d4f;
 
-}
+    color: white;
 
+    font-size: 14px;
 
-.record-content{
-
-flex:1;
-
-min-width:0;
-
-}
-
-
-.record-date{
-
-font-size:13px;
-
-color:#888;
+    border-radius: 10px;
 
 }
 
 
-.record-info{
+/* ==========================
+   单条记录
+========================== */
 
-font-size:15px;
+.record {
 
-font-weight:500;
+    display: flex;
 
-margin-top:3px;
+    align-items: center;
 
-}
+    gap: 10px;
 
+    background: #f8f9fb;
 
-.record-money{
+    padding: 12px;
 
-font-size:17px;
+    border-radius: 15px;
 
-font-weight:bold;
-
-color:#1677ff;
-
-margin-top:3px;
-
-}
-
-
-.delete-one{
-
-width:auto;
-
-height:34px;
-
-padding:0 10px;
-
-margin:0;
-
-background:#fff1f0;
-
-color:#ff4d4f;
-
-border:1px solid #ffccc7;
-
-font-size:13px;
-
-border-radius:9px;
+    margin-bottom: 10px;
 
 }
 
 
-.empty{
+.record-select {
 
-text-align:center;
+    width: 25px;
 
-color:#999;
+    flex-shrink: 0;
 
-padding:25px 0;
+}
+
+
+.record-select input {
+
+    width: 20px;
+
+    height: 20px;
+
+    margin: 0;
+
+}
+
+
+.record-content {
+
+    flex: 1;
+
+    min-width: 0;
+
+}
+
+
+.record-date {
+
+    font-size: 13px;
+
+    color: #888;
+
+    line-height: 20px;
+
+}
+
+
+.record-info {
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+    margin-top: 3px;
+
+    line-height: 22px;
+
+}
+
+
+.record-money {
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    color: #1677ff;
+
+    margin-top: 3px;
+
+}
+
+
+/* ==========================
+   单条删除
+========================== */
+
+.delete-one {
+
+    width: auto;
+
+    min-width: 48px;
+
+    height: 34px;
+
+    padding:
+        0 10px;
+
+    margin: 0;
+
+    background: #fff1f0;
+
+    color: #ff4d4f;
+
+    border:
+        1px solid #ffccc7;
+
+    font-size: 13px;
+
+    border-radius: 9px;
+
+    flex-shrink: 0;
+
+}
+
+
+/* ==========================
+   没有记录
+========================== */
+
+.empty {
+
+    text-align: center;
+
+    color: #999;
+
+    padding:
+        25px 0;
+
+    font-size: 15px;
+
+}
+
+
+/* ==========================
+   手机端优化
+========================== */
+
+@media (max-width: 380px) {
+
+    .container {
+
+        padding: 12px;
+
+    }
+
+
+    .header {
+
+        padding:
+            22px 12px;
+
+        border-radius: 22px;
+
+    }
+
+
+    .header h1 {
+
+        font-size: 20px;
+
+    }
+
+
+    .buttons {
+
+        gap: 9px;
+
+    }
+
+
+    .buttons button {
+
+        font-size: 15px;
+
+    }
+
+
+    .card {
+
+        padding: 17px;
+
+    }
+
+
+    .record {
+
+        padding: 10px;
+
+        gap: 7px;
+
+    }
+
+
+    .record-money {
+
+        font-size: 16px;
+
+    }
+
+
+    .delete-one {
+
+        min-width: 44px;
+
+        padding:
+            0 8px;
+
+    }
 
 }
