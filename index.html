@@ -2,13 +2,19 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <meta name="theme-color" content="#fff7f2">
+
   <title>饼饼上下班交通记录</title>
 
   <link rel="stylesheet" href="style.css">
 
-  <!-- 浏览器端 OCR -->
+  <!-- 免费浏览器 OCR，作为辅助功能 -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 
@@ -16,16 +22,22 @@
 
 <div class="container">
 
+  <!-- 标题 -->
   <header>
+
     <div class="logo">🚕</div>
+
     <div>
       <h1>饼饼上下班交通记录</h1>
       <p id="currentTime">北京时间加载中...</p>
     </div>
+
   </header>
+
 
   <!-- 统计 -->
   <section class="stats">
+
     <div class="stat-card">
       <span>本周交通费</span>
       <strong id="weekTotal">¥0.00</strong>
@@ -35,171 +47,526 @@
       <span>本月交通费</span>
       <strong id="monthTotal">¥0.00</strong>
     </div>
+
   </section>
+
 
   <!-- 功能切换 -->
   <div class="tabs">
-    <button class="tab active" data-tab="normal">⚡ 快速记录</button>
-    <button class="tab" data-tab="backfill">📝 补记</button>
-    <button class="tab" data-tab="batch">📋 批量补记</button>
-    <button class="tab" data-tab="ocr">📷 截图识别</button>
+
+    <button
+      class="tab active"
+      data-tab="normal"
+    >
+      ⚡ 快速记录
+    </button>
+
+    <button
+      class="tab"
+      data-tab="backfill"
+    >
+      📝 补记
+    </button>
+
+    <button
+      class="tab"
+      data-tab="batch"
+    >
+      📋 批量补记
+    </button>
+
+    <button
+      class="tab"
+      data-tab="photo"
+    >
+      📷 截图补记
+    </button>
+
   </div>
 
-  <!-- 快速记录 -->
-  <section id="normal" class="panel active">
+
+  <!-- =========================
+       快速记录
+  ========================== -->
+
+  <section
+    id="normal"
+    class="panel active"
+  >
 
     <h2>今天坐车了吗？</h2>
 
     <label>出行</label>
+
     <select id="tripType">
-      <option value="上午上班">🌅 上午上班</option>
-      <option value="下午下班">🌇 下午下班</option>
-      <option value="其他">📍 其他</option>
+      <option value="上午上班">
+        🌅 上午上班
+      </option>
+
+      <option value="下午下班">
+        🌇 下午下班
+      </option>
+
+      <option value="其他">
+        📍 其他
+      </option>
     </select>
+
 
     <label>交通方式</label>
+
     <select id="platform">
-      <option value="滴滴">滴滴</option>
-      <option value="花小猪">花小猪</option>
-      <option value="高德">高德</option>
-      <option value="百度">百度</option>
-      <option value="公交车">公交车</option>
-      <option value="其他">其他</option>
+
+      <option value="滴滴">
+        滴滴
+      </option>
+
+      <option value="花小猪">
+        花小猪
+      </option>
+
+      <option value="高德">
+        高德
+      </option>
+
+      <option value="百度">
+        百度
+      </option>
+
+      <option value="公交车">
+        公交车
+      </option>
+
+      <option value="其他">
+        其他
+      </option>
+
     </select>
 
+
     <label>金额</label>
+
     <div class="money-input">
+
       <span>¥</span>
-      <input id="amount" type="number" step="0.01" placeholder="0.00">
+
+      <input
+        id="amount"
+        type="number"
+        step="0.01"
+        inputmode="decimal"
+        placeholder="0.00"
+      >
+
     </div>
 
-    <button class="primary" onclick="saveNormal()">保存记录</button>
+
+    <button
+      class="primary"
+      onclick="saveNormal()"
+    >
+      保存记录
+    </button>
 
   </section>
 
 
-  <!-- 单条补记 -->
-  <section id="backfill" class="panel">
+  <!-- =========================
+       单条补记
+  ========================== -->
+
+  <section
+    id="backfill"
+    class="panel"
+  >
 
     <h2>补记之前的交通费</h2>
-    <p class="hint">忘记记账没关系，在这里补回来。</p>
+
+    <p class="hint">
+      忘记记账没关系，在这里补回来。
+    </p>
+
 
     <label>日期</label>
-    <input id="backDate" type="date">
+
+    <input
+      id="backDate"
+      type="date"
+    >
+
 
     <label>时间</label>
-    <input id="backTime" type="time">
+
+    <input
+      id="backTime"
+      type="time"
+    >
+
 
     <label>出行</label>
+
     <select id="backTrip">
-      <option value="上午上班">🌅 上午上班</option>
-      <option value="下午下班">🌇 下午下班</option>
-      <option value="其他">📍 其他</option>
+
+      <option value="上午上班">
+        🌅 上午上班
+      </option>
+
+      <option value="下午下班">
+        🌇 下午下班
+      </option>
+
+      <option value="其他">
+        📍 其他
+      </option>
+
     </select>
+
 
     <label>交通方式</label>
+
     <select id="backPlatform">
-      <option value="滴滴">滴滴</option>
-      <option value="花小猪">花小猪</option>
-      <option value="高德">高德</option>
-      <option value="百度">百度</option>
-      <option value="公交车">公交车</option>
-      <option value="其他">其他</option>
+
+      <option value="滴滴">
+        滴滴
+      </option>
+
+      <option value="花小猪">
+        花小猪
+      </option>
+
+      <option value="高德">
+        高德
+      </option>
+
+      <option value="百度">
+        百度
+      </option>
+
+      <option value="公交车">
+        公交车
+      </option>
+
+      <option value="其他">
+        其他
+      </option>
+
     </select>
 
+
     <label>金额</label>
+
     <div class="money-input">
+
       <span>¥</span>
-      <input id="backAmount" type="number" step="0.01" placeholder="0.00">
+
+      <input
+        id="backAmount"
+        type="number"
+        step="0.01"
+        inputmode="decimal"
+        placeholder="0.00"
+      >
+
     </div>
 
-    <button class="primary" onclick="saveBackfill(false)">保存补记</button>
-    <button class="secondary" onclick="saveBackfill(true)">保存并继续补记</button>
+
+    <button
+      class="primary"
+      onclick="saveBackfill(false)"
+    >
+      保存补记
+    </button>
+
+
+    <button
+      class="secondary"
+      onclick="saveBackfill(true)"
+    >
+      保存并继续补记
+    </button>
 
   </section>
 
 
-  <!-- 批量补记 -->
-  <section id="batch" class="panel">
+  <!-- =========================
+       批量补记
+  ========================== -->
+
+  <section
+    id="batch"
+    class="panel"
+  >
 
     <h2>批量补记</h2>
-    <p class="hint">一次把之前漏掉的记录全部补上。</p>
+
+    <p class="hint">
+      一次把之前漏掉的记录全部补上。
+    </p>
+
 
     <div id="batchRows"></div>
 
-    <button class="secondary" onclick="addBatchRow()">＋ 添加一条</button>
-    <button class="primary" onclick="saveBatch()">全部保存</button>
+
+    <button
+      class="secondary"
+      onclick="addBatchRow()"
+    >
+      ＋ 添加一条
+    </button>
+
+
+    <button
+      class="primary"
+      onclick="saveBatch()"
+    >
+      全部保存
+    </button>
 
   </section>
 
 
-  <!-- OCR -->
-  <section id="ocr" class="panel">
+  <!-- =========================
+       截图补记
+  ========================== -->
 
-    <h2>支付截图识别</h2>
+  <section
+    id="photo"
+    class="panel"
+  >
+
+    <h2>📷 截图补记</h2>
 
     <p class="hint">
-      上传支付宝、微信、滴滴等支付截图，网页会尝试识别金额、时间和平台。
+      可以选择一张，也可以一次选择多张支付截图。
+      图片只用于当前补记，不会保存到浏览器。
     </p>
 
+
+    <!-- 上传 -->
     <div class="upload-box">
-      <input id="imageInput" type="file" accept="image/*">
-      <p>📷 选择支付截图</p>
-    </div>
 
-    <img id="previewImage" class="preview hidden">
+      <input
+        id="photoInput"
+        type="file"
+        accept="image/*"
+        multiple
+      >
 
-    <button id="ocrButton" class="primary" onclick="recognizeImage()">
-      开始识别
-    </button>
-
-    <div id="ocrProgress" class="ocr-progress"></div>
-
-    <!-- OCR确认 -->
-    <div id="ocrResult" class="ocr-result hidden">
-
-      <h3>✨ 识别结果</h3>
-
-      <p class="warning">
-        请确认识别结果正确后再保存。
+      <p>
+        📷 点击选择支付截图
       </p>
 
-      <label>日期</label>
-      <input id="ocrDate" type="date">
+      <small>
+        支持单张 / 多张
+      </small>
 
-      <label>时间</label>
-      <input id="ocrTime" type="time">
+    </div>
 
-      <label>出行</label>
-      <select id="ocrTrip">
-        <option value="上午上班">🌅 上午上班</option>
-        <option value="下午下班">🌇 下午下班</option>
-        <option value="其他">📍 其他</option>
-      </select>
 
-      <label>交通方式</label>
-      <select id="ocrPlatform">
-        <option value="滴滴">滴滴</option>
-        <option value="花小猪">花小猪</option>
-        <option value="高德">高德</option>
-        <option value="百度">百度</option>
-        <option value="公交车">公交车</option>
-        <option value="其他">其他</option>
-      </select>
+    <!-- 选择图片之后显示 -->
+    <div
+      id="photoWorkspace"
+      class="hidden"
+    >
 
-      <label>金额</label>
-      <div class="money-input">
-        <span>¥</span>
-        <input id="ocrAmount" type="number" step="0.01">
+      <!-- 图片数量 -->
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          margin-top:18px;
+        "
+      >
+
+        <strong id="photoCounter">
+          第 1 / 1 张
+        </strong>
+
+        <button
+          class="danger-small"
+          onclick="clearPhotos()"
+        >
+          重新选择
+        </button>
+
       </div>
 
-      <button class="primary" onclick="saveOCR()">
-        确认并保存
+
+      <!-- 图片 -->
+      <img
+        id="photoPreview"
+        class="preview"
+        alt="支付截图"
+      >
+
+
+      <!-- 上一张 / 下一张 -->
+      <div
+        style="
+          display:grid;
+          grid-template-columns:1fr 1fr;
+          gap:10px;
+          margin-top:10px;
+        "
+      >
+
+        <button
+          class="secondary"
+          onclick="previousPhoto()"
+        >
+          ← 上一张
+        </button>
+
+        <button
+          class="secondary"
+          onclick="nextPhoto(false)"
+        >
+          下一张 →
+        </button>
+
+      </div>
+
+
+      <!-- OCR辅助 -->
+      <button
+        id="photoOCRButton"
+        class="secondary"
+        onclick="tryPhotoOCR()"
+      >
+        ✨ 尝试自动读取
       </button>
 
-      <details>
-        <summary>查看 OCR 原始文字</summary>
-        <pre id="ocrRawText"></pre>
+
+      <div
+        id="photoOCRProgress"
+        class="ocr-progress"
+      ></div>
+
+
+      <p class="hint">
+        自动读取只是辅助。如果没有识别出来，
+        直接看着上面的截图填写即可。
+      </p>
+
+
+      <!-- 日期 -->
+      <label>日期</label>
+
+      <input
+        id="photoDate"
+        type="date"
+      >
+
+
+      <!-- 时间 -->
+      <label>时间</label>
+
+      <input
+        id="photoTime"
+        type="time"
+      >
+
+
+      <!-- 出行 -->
+      <label>出行</label>
+
+      <select id="photoTrip">
+
+        <option value="上午上班">
+          🌅 上午上班
+        </option>
+
+        <option value="下午下班">
+          🌇 下午下班
+        </option>
+
+        <option value="其他">
+          📍 其他
+        </option>
+
+      </select>
+
+
+      <!-- 平台 -->
+      <label>交通方式</label>
+
+      <select id="photoPlatform">
+
+        <option value="滴滴">
+          滴滴
+        </option>
+
+        <option value="花小猪">
+          花小猪
+        </option>
+
+        <option value="高德">
+          高德
+        </option>
+
+        <option value="百度">
+          百度
+        </option>
+
+        <option value="公交车">
+          公交车
+        </option>
+
+        <option value="其他">
+          其他
+        </option>
+
+      </select>
+
+
+      <!-- 金额 -->
+      <label>实际支付金额</label>
+
+      <div class="money-input">
+
+        <span>¥</span>
+
+        <input
+          id="photoAmount"
+          type="number"
+          step="0.01"
+          inputmode="decimal"
+          placeholder="例如 11.82"
+        >
+
+      </div>
+
+
+      <!-- 保存 -->
+      <button
+        class="primary"
+        onclick="savePhotoRecord()"
+      >
+        ✓ 保存这张
+      </button>
+
+
+      <p
+        id="photoSaveHint"
+        class="hint"
+        style="text-align:center;"
+      ></p>
+
+
+      <!-- OCR原文 -->
+      <details
+        id="photoOCRDetails"
+        class="hidden"
+        style="margin-top:15px;"
+      >
+
+        <summary>
+          查看自动读取的原始文字
+        </summary>
+
+        <pre id="photoOCRRawText"></pre>
+
       </details>
 
     </div>
@@ -207,19 +574,32 @@
   </section>
 
 
-  <!-- 历史记录 -->
+  <!-- =========================
+       历史记录
+  ========================== -->
+
   <section class="history">
 
     <div class="history-title">
+
       <h2>📒 历史记录</h2>
-      <button class="danger-small" onclick="deleteAll()">清空全部</button>
+
+      <button
+        class="danger-small"
+        onclick="deleteAll()"
+      >
+        清空全部
+      </button>
+
     </div>
+
 
     <div id="records"></div>
 
   </section>
 
 </div>
+
 
 <script src="app.js"></script>
 
