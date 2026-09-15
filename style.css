@@ -1,723 +1,344 @@
-/* ==========================
-   全局
-========================== */
-
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
-
-
-html {
-    -webkit-text-size-adjust: 100%;
-}
-
 
 body {
-
-    margin: 0;
-
-    padding: 0;
-
-    background: #f2f4f8;
-
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Microsoft YaHei",
-        sans-serif;
-
-    color: #222;
-
+  margin: 0;
+  background: #fff8f4;
+  color: #333;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
 }
-
-
-/* ==========================
-   主容器
-========================== */
 
 .container {
-
-    width: 100%;
-
-    max-width: 520px;
-
-    margin: 0 auto;
-
-    padding: 15px;
-
+  max-width: 720px;
+  margin: auto;
+  padding: 22px 16px 60px;
 }
 
-
-/* ==========================
-   顶部
-========================== */
-
-.header {
-
-    background:
-        linear-gradient(
-            135deg,
-            #1677ff,
-            #70b5ff
-        );
-
-    color: white;
-
-    padding: 25px 15px 22px;
-
-    border-radius: 25px;
-
-    text-align: center;
-
-    margin-bottom: 20px;
-
-    box-shadow:
-        0 8px 20px
-        rgba(22, 119, 255, 0.25);
-
+header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
 }
 
-
-.header h1 {
-
-    font-size: 22px;
-
-    margin:
-        0 0 15px;
-
-    font-weight: 700;
-
+.logo {
+  width: 55px;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 18px;
+  font-size: 29px;
+  box-shadow: 0 5px 20px rgba(0,0,0,.06);
 }
 
-
-#date {
-
-    font-size: 18px;
-
-    font-weight: 500;
-
+h1 {
+  font-size: 22px;
+  margin: 0 0 5px;
 }
 
-
-#week {
-
-    font-size: 17px;
-
-    margin-top: 5px;
-
+h2 {
+  font-size: 18px;
+  margin-top: 0;
 }
 
-
-#clock {
-
-    font-size: 30px;
-
-    font-weight: 700;
-
-    margin-top: 10px;
-
-    letter-spacing: 1px;
-
+header p {
+  margin: 0;
+  color: #888;
+  font-size: 13px;
 }
 
-
-.timezone {
-
-    font-size: 12px;
-
-    opacity: 0.8;
-
-    margin-top: 5px;
-
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
-
-/* ==========================
-   卡片
-========================== */
-
-.card {
-
-    background: white;
-
-    border-radius: 20px;
-
-    padding: 20px;
-
-    margin-bottom: 15px;
-
-    box-shadow:
-        0 5px 15px
-        rgba(0, 0, 0, 0.06);
-
+.stat-card {
+  background: white;
+  padding: 18px;
+  border-radius: 18px;
+  box-shadow: 0 5px 18px rgba(0,0,0,.05);
 }
 
-
-.card h3 {
-
-    margin:
-        0 0 12px;
-
-    font-size: 17px;
-
+.stat-card span {
+  display: block;
+  color: #888;
+  font-size: 13px;
+  margin-bottom: 7px;
 }
 
-
-.card h2 {
-
-    margin:
-        0 0 15px;
-
-    font-size: 20px;
-
+.stat-card strong {
+  font-size: 24px;
 }
 
-
-/* ==========================
-   出行类型按钮
-========================== */
-
-.buttons {
-
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap: 12px;
-
+.tabs {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  margin-bottom: 14px;
+  padding-bottom: 4px;
 }
 
-
-.buttons button {
-
-    width: 100%;
-
-    height: 48px;
-
-    margin: 0;
-
-    border: none;
-
-    border-radius: 15px;
-
-    background: #1677ff;
-
-    color: white;
-
-    font-size: 16px;
-
-    font-weight: 500;
-
-    cursor: pointer;
-
-    -webkit-tap-highlight-color:
-        transparent;
-
+.tab {
+  white-space: nowrap;
+  border: 0;
+  background: #eee7e2;
+  padding: 10px 14px;
+  border-radius: 20px;
+  cursor: pointer;
 }
 
-
-/* ==========================
-   周末出游按钮
-========================== */
-
-.buttons .weekend-button {
-
-    grid-column:
-        1 / -1;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ff9f43,
-            #ffbe76
-        );
-
+.tab.active {
+  background: #333;
+  color: white;
 }
 
-
-/* ==========================
-   按钮点击效果
-========================== */
-
-button:active {
-
-    transform: scale(0.98);
-
+.panel {
+  display: none;
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 6px 25px rgba(0,0,0,.05);
+  margin-bottom: 20px;
 }
 
-
-.buttons button:active {
-
-    opacity: 0.85;
-
+.panel.active {
+  display: block;
 }
 
-
-/* ==========================
-   当前选择
-========================== */
-
-.selected {
-
-    margin-top: 15px;
-
-    padding: 12px;
-
-    background: #f0f7ff;
-
-    border-radius: 12px;
-
-    color: #1677ff;
-
-    font-size: 15px;
-
-    text-align: center;
-
+label {
+  display: block;
+  font-size: 13px;
+  color: #666;
+  margin: 15px 0 7px;
 }
 
-
-/* ==========================
-   下拉菜单
-========================== */
-
-select {
-
-    width: 100%;
-
-    height: 48px;
-
-    border-radius: 15px;
-
-    border:
-        1px solid #ddd;
-
-    background: white;
-
-    padding:
-        0 12px;
-
-    font-size: 16px;
-
-    color: #333;
-
-    outline: none;
-
-}
-
-
-/* ==========================
-   金额
-========================== */
-
-.money-title {
-
-    margin-top: 20px !important;
-
-}
-
-
+select,
 input {
-
-    width: 100%;
-
-    height: 48px;
-
-    border-radius: 15px;
-
-    border:
-        1px solid #ddd;
-
-    background: white;
-
-    padding:
-        0 14px;
-
-    font-size: 16px;
-
-    outline: none;
-
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 16px;
 }
 
-
-input:focus,
-select:focus {
-
-    border-color:
-        #1677ff;
-
+.money-input {
+  position: relative;
 }
 
-
-/* ==========================
-   保存按钮
-========================== */
-
-.save {
-
-    width: 100%;
-
-    height: 50px;
-
-    border: none;
-
-    border-radius: 15px;
-
-    background: #07c160;
-
-    color: white;
-
-    font-size: 18px;
-
-    font-weight: 600;
-
-    margin-top: 15px;
-
-    cursor: pointer;
-
+.money-input span {
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  font-size: 18px;
 }
 
-
-/* ==========================
-   统计
-========================== */
-
-.statistics {
-
-    display: flex;
-
-    gap: 10px;
-
+.money-input input {
+  padding-left: 34px;
 }
 
-
-.statistics .card {
-
-    flex: 1;
-
+button {
+  font-size: 14px;
 }
 
-
-.stat {
-
-    text-align: center;
-
-    min-width: 0;
-
+.primary,
+.secondary {
+  width: 100%;
+  border: none;
+  border-radius: 13px;
+  padding: 14px;
+  margin-top: 14px;
+  cursor: pointer;
 }
 
-
-.stat h3 {
-
-    font-size: 16px;
-
+.primary {
+  background: #333;
+  color: white;
 }
 
-
-#weekTotal,
-#monthTotal {
-
-    font-size: 15px;
-
-    font-weight: bold;
-
-    color: #1677ff;
-
-    line-height: 22px;
-
+.secondary {
+  background: #f1ece8;
+  color: #333;
 }
 
-
-/* ==========================
-   历史记录操作栏
-========================== */
-
-.list-actions {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content:
-        space-between;
-
-    margin-bottom: 15px;
-
-    padding-bottom: 12px;
-
-    border-bottom:
-        1px solid #eee;
-
+.hint {
+  font-size: 13px;
+  color: #888;
 }
 
-
-.list-actions label {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    font-size: 15px;
-
+.batch-row {
+  background: #faf7f5;
+  padding: 12px;
+  border-radius: 14px;
+  margin-bottom: 10px;
 }
 
-
-.list-actions input {
-
-    width: 20px;
-
-    height: 20px;
-
-    margin: 0;
-
+.batch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
 }
 
-
-/* ==========================
-   删除选中
-========================== */
-
-.delete-selected {
-
-    width: auto;
-
-    height: 38px;
-
-    padding:
-        0 14px;
-
-    margin: 0;
-
-    border: none;
-
-    background: #ff4d4f;
-
-    color: white;
-
-    font-size: 14px;
-
-    border-radius: 10px;
-
+.batch-row input,
+.batch-row select {
+  margin-bottom: 8px;
 }
 
+.remove-row {
+  border: none;
+  background: none;
+  color: #c54a4a;
+  cursor: pointer;
+}
 
-/* ==========================
-   单条记录
-========================== */
+.upload-box {
+  position: relative;
+  border: 2px dashed #ddd;
+  border-radius: 16px;
+  text-align: center;
+  padding: 25px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.upload-box input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.preview {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  margin-top: 15px;
+  border-radius: 15px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.ocr-progress {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #777;
+  text-align: center;
+}
+
+.ocr-result {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.warning {
+  padding: 10px;
+  border-radius: 10px;
+  background: #fff3d9;
+  font-size: 13px;
+}
+
+pre {
+  white-space: pre-wrap;
+  font-size: 12px;
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.history {
+  margin-top: 25px;
+}
+
+.history-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 .record {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    background: #f8f9fb;
-
-    padding: 12px;
-
-    border-radius: 15px;
-
-    margin-bottom: 10px;
-
+  background: white;
+  border-radius: 16px;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,.04);
 }
 
-
-.record-select {
-
-    width: 25px;
-
-    flex-shrink: 0;
-
+.record-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 }
-
-
-.record-select input {
-
-    width: 20px;
-
-    height: 20px;
-
-    margin: 0;
-
-}
-
-
-.record-content {
-
-    flex: 1;
-
-    min-width: 0;
-
-}
-
 
 .record-date {
-
-    font-size: 13px;
-
-    color: #888;
-
-    line-height: 20px;
-
+  font-size: 13px;
+  color: #888;
 }
-
-
-.record-info {
-
-    font-size: 15px;
-
-    font-weight: 500;
-
-    margin-top: 3px;
-
-    line-height: 22px;
-
-}
-
 
 .record-money {
-
-    font-size: 17px;
-
-    font-weight: bold;
-
-    color: #1677ff;
-
-    margin-top: 3px;
-
+  font-size: 19px;
+  font-weight: 700;
 }
 
-
-/* ==========================
-   单条删除
-========================== */
-
-.delete-one {
-
-    width: auto;
-
-    min-width: 48px;
-
-    height: 34px;
-
-    padding:
-        0 10px;
-
-    margin: 0;
-
-    background: #fff1f0;
-
-    color: #ff4d4f;
-
-    border:
-        1px solid #ffccc7;
-
-    font-size: 13px;
-
-    border-radius: 9px;
-
-    flex-shrink: 0;
-
+.record-info {
+  margin-top: 8px;
+  font-size: 14px;
 }
 
+.tag {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 7px;
+  background: #f3ebe6;
+  border-radius: 8px;
+  margin-left: 5px;
+}
 
-/* ==========================
-   没有记录
-========================== */
+.delete-button {
+  margin-top: 10px;
+  border: none;
+  background: none;
+  padding: 0;
+  color: #c54a4a;
+  cursor: pointer;
+}
+
+.danger-small {
+  border: none;
+  background: none;
+  color: #c54a4a;
+  cursor: pointer;
+}
 
 .empty {
-
-    text-align: center;
-
-    color: #999;
-
-    padding:
-        25px 0;
-
-    font-size: 15px;
-
+  text-align: center;
+  color: #aaa;
+  padding: 35px 0;
 }
 
+@media (max-width: 520px) {
+  h1 {
+    font-size: 19px;
+  }
 
-/* ==========================
-   手机端优化
-========================== */
+  .stat-card strong {
+    font-size: 21px;
+  }
 
-@media (max-width: 380px) {
-
-    .container {
-
-        padding: 12px;
-
-    }
-
-
-    .header {
-
-        padding:
-            22px 12px;
-
-        border-radius: 22px;
-
-    }
-
-
-    .header h1 {
-
-        font-size: 20px;
-
-    }
-
-
-    .buttons {
-
-        gap: 9px;
-
-    }
-
-
-    .buttons button {
-
-        font-size: 15px;
-
-    }
-
-
-    .card {
-
-        padding: 17px;
-
-    }
-
-
-    .record {
-
-        padding: 10px;
-
-        gap: 7px;
-
-    }
-
-
-    .record-money {
-
-        font-size: 16px;
-
-    }
-
-
-    .delete-one {
-
-        min-width: 44px;
-
-        padding:
-            0 8px;
-
-    }
-
+  .batch-grid {
+    grid-template-columns: 1fr;
+  }
 }

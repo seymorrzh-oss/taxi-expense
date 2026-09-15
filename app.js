@@ -1,780 +1,742 @@
-let type = "";
+const STORAGE_KEY = "bingbing_transport_records_v2";
 
+let records = loadRecords();
 
-/* ==========================
-   北京时间 UTC+8
-========================== */
-
-function getBeijingTime() {
-
-    const now = new Date();
-
-    const utc =
-        now.getTime() +
-        now.getTimezoneOffset() * 60000;
-
-    return new Date(
-        utc + 8 * 60 * 60 * 1000
-    );
+function loadRecords() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch {
+    return [];
+  }
 }
 
-
-/* ==========================
-   读取数据
-========================== */
-
-function getData() {
-
-    try {
-
-        const data =
-            JSON.parse(
-                localStorage.getItem("taxiData") || "[]"
-            );
-
-        return Array.isArray(data)
-            ? data
-            : [];
-
-    } catch (error) {
-
-        console.error(
-            "读取交通记录失败：",
-            error
-        );
-
-        return [];
-    }
+function persist() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 }
 
+/* -------------------------
+   北京时间
+------------------------- */
 
-/* ==========================
-   保存数据
-========================== */
+function getBeijingNow() {
+  const str = new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Shanghai"
+  });
 
-function saveAllData(data) {
-
-    localStorage.setItem(
-        "taxiData",
-        JSON.stringify(data)
-    );
+  return new Date(str);
 }
 
+function dateString(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
 
-/* ==========================
-   选择出行类型
-========================== */
-
-function setType(t) {
-
-    type = t;
-
-    const box =
-        document.getElementById("typeShow");
-
-    if (box) {
-
-        box.innerHTML =
-            "已选择：" + t;
-    }
+  return `${y}-${m}-${d}`;
 }
 
-
-/* ==========================
-   显示北京时间
-========================== */
+function timeString(date) {
+  return `${String(date.getHours()).padStart(2,"0")}:${String(
+    date.getMinutes()
+  ).padStart(2,"0")}`;
+}
 
 function updateClock() {
+  const now = getBeijingNow();
 
-    const beijing =
-        getBeijingTime();
-
-    const y =
-        beijing.getFullYear();
-
-    const m =
-        beijing.getMonth() + 1;
-
-    const d =
-        beijing.getDate();
-
-    const weeks = [
-        "星期日",
-        "星期一",
-        "星期二",
-        "星期三",
-        "星期四",
-        "星期五",
-        "星期六"
-    ];
-
-
-    const dateBox =
-        document.getElementById("date");
-
-    const weekBox =
-        document.getElementById("week");
-
-    const clockBox =
-        document.getElementById("clock");
-
-
-    if (dateBox) {
-
-        dateBox.innerHTML =
-            y + "年" +
-            m + "月" +
-            d + "日";
-    }
-
-
-    if (weekBox) {
-
-        weekBox.innerHTML =
-            weeks[beijing.getDay()];
-    }
-
-
-    if (clockBox) {
-
-        const hh =
-            String(
-                beijing.getHours()
-            ).padStart(2, "0");
-
-        const mm =
-            String(
-                beijing.getMinutes()
-            ).padStart(2, "0");
-
-        const ss =
-            String(
-                beijing.getSeconds()
-            ).padStart(2, "0");
-
-
-        clockBox.innerHTML =
-            hh + ":" +
-            mm + ":" +
-            ss;
-    }
+  document.getElementById("currentTime").textContent =
+    `${dateString(now)} ${timeString(now)} 北京时间`;
 }
 
-
-setInterval(
-    updateClock,
-    1000
-);
-
+setInterval(updateClock, 1000);
 updateClock();
 
+/* -------------------------
+   Tab
+------------------------- */
 
-/* ==========================
-   保存新记录
-========================== */
+document.querySelectorAll(".tab").forEach(button => {
+  button.addEventListener("click", () => {
 
-function saveData() {
+    document.querySelectorAll(".tab").forEach(x =>
+      x.classList.remove("active")
+    );
 
-    const moneyInput =
-        document.getElementById("money");
+    document.querySelectorAll(".panel").forEach(x =>
+      x.classList.remove("active")
+    );
 
-    const methodInput =
-        document.getElementById("method");
+    button.classList.add("active");
 
+    document
+      .getElementById(button.dataset.tab)
+      .classList.add("active");
+  });
+});
 
-    const money =
-        moneyInput.value;
+/* -------------------------
+   默认补记日期
+------------------------- */
 
-    const method =
-        methodInput.value;
+function setDefaultDates() {
+  const now = getBeijingNow();
 
-
-    if (type === "") {
-
-        alert(
-            "请选择上午上班、下午下班或周末出游"
-        );
-
-        return;
-    }
-
-
-    if (
-        money === "" ||
-        Number(money) < 0
-    ) {
-
-        alert(
-            "请输入正确的金额"
-        );
-
-        return;
-    }
-
-
-    const beijing =
-        getBeijingTime();
-
-
-    const record = {
-
-        date:
-            beijing.getFullYear() +
-            "-" +
-            String(
-                beijing.getMonth() + 1
-            ).padStart(2, "0") +
-            "-" +
-            String(
-                beijing.getDate()
-            ).padStart(2, "0"),
-
-        time:
-            String(
-                beijing.getHours()
-            ).padStart(2, "0") +
-            ":" +
-            String(
-                beijing.getMinutes()
-            ).padStart(2, "0") +
-            ":" +
-            String(
-                beijing.getSeconds()
-            ).padStart(2, "0"),
-
-        type:
-            type,
-
-        method:
-            method,
-
-        money:
-            Number(money)
-    };
-
-
-    const data =
-        getData();
-
-
-    data.push(record);
-
-
-    saveAllData(data);
-
-
-    alert("记录成功");
-
-
-    moneyInput.value = "";
-
-
-    show();
+  document.getElementById("backDate").value = dateString(now);
+  document.getElementById("backTime").value = timeString(now);
 }
 
+setDefaultDates();
 
-/* ==========================
-   显示历史记录
-========================== */
+/* -------------------------
+   新记录
+------------------------- */
 
-function show() {
+function createRecord({
+  date,
+  time,
+  trip,
+  platform,
+  amount,
+  source = "normal"
+}) {
 
-    const data =
-        getData();
+  return {
+    id:
+      Date.now().toString() +
+      Math.random().toString(16).slice(2),
 
+    date,
+    time,
+    trip,
+    platform,
+    amount: Number(amount),
+    source,
+    createdAt: new Date().toISOString()
+  };
+}
 
-    const list =
-        document.getElementById("list");
+/* -------------------------
+   正常记录
+------------------------- */
 
+function saveNormal() {
 
-    if (!list) {
-        return;
+  const amount = Number(
+    document.getElementById("amount").value
+  );
+
+  if (!amount || amount <= 0) {
+    alert("请输入正确的金额");
+    return;
+  }
+
+  const now = getBeijingNow();
+
+  const record = createRecord({
+    date: dateString(now),
+    time: timeString(now),
+    trip: document.getElementById("tripType").value,
+    platform: document.getElementById("platform").value,
+    amount,
+    source: "normal"
+  });
+
+  records.push(record);
+
+  persist();
+  render();
+
+  document.getElementById("amount").value = "";
+
+  alert("记录成功 🚕");
+}
+
+/* -------------------------
+   单条补记
+------------------------- */
+
+function saveBackfill(continueMode) {
+
+  const date = document.getElementById("backDate").value;
+  const time = document.getElementById("backTime").value;
+  const amount = Number(
+    document.getElementById("backAmount").value
+  );
+
+  if (!date || !time || !amount || amount <= 0) {
+    alert("请把日期、时间和金额填写完整");
+    return;
+  }
+
+  records.push(
+    createRecord({
+      date,
+      time,
+      trip: document.getElementById("backTrip").value,
+      platform:
+        document.getElementById("backPlatform").value,
+      amount,
+      source: "backfill"
+    })
+  );
+
+  persist();
+  render();
+
+  document.getElementById("backAmount").value = "";
+
+  if (!continueMode) {
+    alert("补记成功 📝");
+  }
+}
+
+/* -------------------------
+   批量补记
+------------------------- */
+
+function addBatchRow() {
+
+  const now = getBeijingNow();
+
+  const row = document.createElement("div");
+  row.className = "batch-row";
+
+  row.innerHTML = `
+    <div class="batch-grid">
+
+      <input
+        class="batch-date"
+        type="date"
+        value="${dateString(now)}"
+      >
+
+      <input
+        class="batch-time"
+        type="time"
+        value="08:30"
+      >
+
+      <select class="batch-trip">
+        <option value="上午上班">🌅 上午上班</option>
+        <option value="下午下班">🌇 下午下班</option>
+        <option value="其他">📍 其他</option>
+      </select>
+
+      <select class="batch-platform">
+        <option value="滴滴">滴滴</option>
+        <option value="花小猪">花小猪</option>
+        <option value="高德">高德</option>
+        <option value="百度">百度</option>
+        <option value="公交车">公交车</option>
+        <option value="其他">其他</option>
+      </select>
+
+    </div>
+
+    <input
+      class="batch-amount"
+      type="number"
+      step="0.01"
+      placeholder="金额 ¥"
+    >
+
+    <button
+      class="remove-row"
+      onclick="this.parentElement.remove()"
+    >
+      删除这一行
+    </button>
+  `;
+
+  document.getElementById("batchRows").appendChild(row);
+}
+
+addBatchRow();
+
+function saveBatch() {
+
+  const rows =
+    document.querySelectorAll(".batch-row");
+
+  let added = 0;
+
+  rows.forEach(row => {
+
+    const date =
+      row.querySelector(".batch-date").value;
+
+    const time =
+      row.querySelector(".batch-time").value;
+
+    const amount =
+      Number(row.querySelector(".batch-amount").value);
+
+    if (!date || !time || !amount || amount <= 0) {
+      return;
     }
 
+    records.push(
+      createRecord({
+        date,
+        time,
+        trip:
+          row.querySelector(".batch-trip").value,
+        platform:
+          row.querySelector(".batch-platform").value,
+        amount,
+        source: "batch"
+      })
+    );
 
-    let html = "";
+    added++;
+  });
 
+  if (!added) {
+    alert("还没有可以保存的记录");
+    return;
+  }
 
-    /* 顶部操作栏 */
+  persist();
+  render();
 
-    if (data.length > 0) {
+  document.getElementById("batchRows").innerHTML = "";
+  addBatchRow();
 
-        html += `
+  alert(`成功补记 ${added} 条记录 📋`);
+}
 
-        <div class="list-actions">
+/* -------------------------
+   图片预览
+------------------------- */
 
-            <label>
+document
+  .getElementById("imageInput")
+  .addEventListener("change", event => {
 
-                <input
-                    type="checkbox"
-                    id="selectAll"
-                    onchange="toggleSelectAll(this)"
-                >
+    const file = event.target.files[0];
 
-                全选
+    if (!file) return;
 
-            </label>
+    const image =
+      document.getElementById("previewImage");
 
+    image.src = URL.createObjectURL(file);
+    image.classList.remove("hidden");
 
-            <button
-                class="delete-selected"
-                onclick="deleteSelected()"
-            >
-                删除选中
-            </button>
+    document
+      .getElementById("ocrResult")
+      .classList.add("hidden");
+  });
 
-        </div>
+/* -------------------------
+   OCR
+------------------------- */
 
-        `;
+async function recognizeImage() {
+
+  const input =
+    document.getElementById("imageInput");
+
+  if (!input.files.length) {
+    alert("请先选择一张支付截图");
+    return;
+  }
+
+  const progress =
+    document.getElementById("ocrProgress");
+
+  const button =
+    document.getElementById("ocrButton");
+
+  button.disabled = true;
+  button.textContent = "正在识别...";
+
+  try {
+
+    const result =
+      await Tesseract.recognize(
+        input.files[0],
+        "chi_sim+eng",
+        {
+          logger: m => {
+            if (m.status === "recognizing text") {
+              progress.textContent =
+                `正在识别 ${Math.round(m.progress * 100)}%`;
+            } else {
+              progress.textContent = m.status || "";
+            }
+          }
+        }
+      );
+
+    const text = result.data.text || "";
+
+    document.getElementById("ocrRawText").textContent =
+      text;
+
+    parseOCR(text);
+
+    document
+      .getElementById("ocrResult")
+      .classList.remove("hidden");
+
+    progress.textContent =
+      "识别完成，请检查结果 ✓";
+
+  } catch (error) {
+
+    console.error(error);
+
+    progress.textContent =
+      "识别失败，请重新尝试。";
+
+    alert(
+      "OCR 识别失败。请确认网络正常，然后重新上传截图。"
+    );
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "重新识别";
+  }
+}
+
+/* -------------------------
+   OCR文字解析
+------------------------- */
+
+function parseOCR(text) {
+
+  const now = getBeijingNow();
+
+  let detectedDate = dateString(now);
+  let detectedTime = timeString(now);
+  let detectedPlatform = "其他";
+  let detectedAmount = "";
+
+  /* 平台 */
+
+  if (/滴滴|DiDi/i.test(text)) {
+    detectedPlatform = "滴滴";
+  }
+
+  else if (/花小猪/i.test(text)) {
+    detectedPlatform = "花小猪";
+  }
+
+  else if (/高德|Amap/i.test(text)) {
+    detectedPlatform = "高德";
+  }
+
+  else if (/百度/i.test(text)) {
+    detectedPlatform = "百度";
+  }
+
+  else if (/公交|巴士/i.test(text)) {
+    detectedPlatform = "公交车";
+  }
+
+  /* 日期 */
+
+  const datePatterns = [
+    /(\d{4})[\/\-.年](\d{1,2})[\/\-.月](\d{1,2})/,
+    /(\d{1,2})[\/\-.月](\d{1,2})/
+  ];
+
+  let match = text.match(datePatterns[0]);
+
+  if (match) {
+
+    detectedDate =
+      `${match[1]}-${String(match[2]).padStart(2,"0")}-${String(match[3]).padStart(2,"0")}`;
+
+  } else {
+
+    match = text.match(datePatterns[1]);
+
+    if (match) {
+      detectedDate =
+        `${now.getFullYear()}-${String(match[1]).padStart(2,"0")}-${String(match[2]).padStart(2,"0")}`;
     }
+  }
 
+  /* 时间 */
 
-    /*
-       重点：
-       不再使用 ID。
-       直接使用记录在数组中的 index。
-    */
+  match = text.match(
+    /(?:[01]?\d|2[0-3]):[0-5]\d/
+  );
 
-    for (
-        let index = data.length - 1;
-        index >= 0;
-        index--
+  if (match) {
+    detectedTime = match[0];
+  }
+
+  /* 金额 */
+
+  const amountPatterns = [
+
+    /(?:支付金额|实付|付款金额|订单金额|合计)[^\d¥￥]{0,10}[¥￥]?\s*(\d+(?:\.\d{1,2})?)/i,
+
+    /[¥￥]\s*(\d+(?:\.\d{1,2})?)/,
+
+    /(\d+\.\d{2})\s*元/
+  ];
+
+  for (const pattern of amountPatterns) {
+
+    const amountMatch = text.match(pattern);
+
+    if (amountMatch) {
+      detectedAmount = amountMatch[1];
+      break;
+    }
+  }
+
+  document.getElementById("ocrDate").value =
+    detectedDate;
+
+  document.getElementById("ocrTime").value =
+    detectedTime;
+
+  document.getElementById("ocrPlatform").value =
+    detectedPlatform;
+
+  document.getElementById("ocrAmount").value =
+    detectedAmount;
+
+  /* 自动判断上班/下班 */
+
+  const hour =
+    Number(detectedTime.split(":")[0]);
+
+  if (hour < 13) {
+    document.getElementById("ocrTrip").value =
+      "上午上班";
+  }
+
+  else {
+    document.getElementById("ocrTrip").value =
+      "下午下班";
+  }
+}
+
+/* -------------------------
+   保存OCR
+------------------------- */
+
+function saveOCR() {
+
+  const date =
+    document.getElementById("ocrDate").value;
+
+  const time =
+    document.getElementById("ocrTime").value;
+
+  const amount =
+    Number(document.getElementById("ocrAmount").value);
+
+  if (!date || !time || !amount || amount <= 0) {
+
+    alert("请检查日期、时间和金额");
+
+    return;
+  }
+
+  records.push(
+    createRecord({
+      date,
+      time,
+      trip:
+        document.getElementById("ocrTrip").value,
+      platform:
+        document.getElementById("ocrPlatform").value,
+      amount,
+      source: "ocr"
+    })
+  );
+
+  persist();
+  render();
+
+  alert("截图记录保存成功 📷");
+}
+
+/* -------------------------
+   删除
+------------------------- */
+
+function deleteRecord(id) {
+
+  if (!confirm("确定删除这条记录吗？")) {
+    return;
+  }
+
+  records =
+    records.filter(record => record.id !== id);
+
+  persist();
+  render();
+}
+
+function deleteAll() {
+
+  if (!records.length) return;
+
+  if (
+    !confirm(
+      `确定删除全部 ${records.length} 条记录吗？此操作无法恢复。`
+    )
+  ) {
+    return;
+  }
+
+  records = [];
+
+  persist();
+  render();
+}
+
+/* -------------------------
+   周/月统计
+------------------------- */
+
+function parseLocalDate(dateStringValue) {
+
+  const [year, month, day] =
+    dateStringValue.split("-").map(Number);
+
+  return new Date(year, month - 1, day);
+}
+
+function getMonday(date) {
+
+  const d = new Date(date);
+
+  const day = d.getDay();
+
+  const difference =
+    d.getDate() - day + (day === 0 ? -6 : 1);
+
+  d.setDate(difference);
+  d.setHours(0,0,0,0);
+
+  return d;
+}
+
+function calculateStats() {
+
+  const now = getBeijingNow();
+
+  const monday = getMonday(now);
+
+  const nextMonday = new Date(monday);
+  nextMonday.setDate(nextMonday.getDate() + 7);
+
+  let weekTotal = 0;
+  let monthTotal = 0;
+
+  records.forEach(record => {
+
+    const date = parseLocalDate(record.date);
+
+    if (
+      date >= monday &&
+      date < nextMonday
     ) {
+      weekTotal += Number(record.amount);
+    }
 
-        const item =
-            data[index];
+    if (
+      date.getFullYear() === now.getFullYear() &&
+      date.getMonth() === now.getMonth()
+    ) {
+      monthTotal += Number(record.amount);
+    }
+  });
 
+  document.getElementById("weekTotal").textContent =
+    `¥${weekTotal.toFixed(2)}`;
 
-        html += `
+  document.getElementById("monthTotal").textContent =
+    `¥${monthTotal.toFixed(2)}`;
+}
 
-        <div class="record">
+/* -------------------------
+   历史记录
+------------------------- */
 
-            <div class="record-select">
+function sourceTag(source) {
 
-                <input
-                    type="checkbox"
-                    class="record-checkbox"
-                    data-index="${index}"
-                >
+  if (source === "backfill" || source === "batch") {
+    return `<span class="tag">补</span>`;
+  }
 
+  if (source === "ocr") {
+    return `<span class="tag">截图</span>`;
+  }
+
+  return "";
+}
+
+function render() {
+
+  const container =
+    document.getElementById("records");
+
+  calculateStats();
+
+  if (!records.length) {
+
+    container.innerHTML =
+      `<div class="empty">还没有交通记录 🚕</div>`;
+
+    return;
+  }
+
+  const sorted =
+    [...records].sort((a,b) => {
+
+      const aTime =
+        new Date(`${a.date}T${a.time}`).getTime();
+
+      const bTime =
+        new Date(`${b.date}T${b.time}`).getTime();
+
+      return bTime - aTime;
+    });
+
+  container.innerHTML =
+    sorted.map(record => `
+
+      <div class="record">
+
+        <div class="record-top">
+
+          <div>
+            <div class="record-date">
+              ${record.date} ${record.time}
+              ${sourceTag(record.source)}
             </div>
 
-
-            <div class="record-content">
-
-                <div class="record-date">
-                    ${item.date || ""}
-                    ${item.time || ""}
-                </div>
-
-
-                <div class="record-info">
-                    ${item.type || ""}
-                    ·
-                    ${item.method || ""}
-                </div>
-
-
-                <div class="record-money">
-                    ¥${Number(item.money || 0).toFixed(2)}
-                </div>
-
+            <div class="record-info">
+              ${record.trip} · ${record.platform}
             </div>
+          </div>
 
-
-            <button
-                class="delete-one"
-                onclick="deleteOne(${index})"
-            >
-                删除
-            </button>
+          <div class="record-money">
+            ¥${Number(record.amount).toFixed(2)}
+          </div>
 
         </div>
 
-        `;
-    }
+        <button
+          class="delete-button"
+          onclick="deleteRecord('${record.id}')"
+        >
+          删除
+        </button>
 
+      </div>
 
-    if (data.length === 0) {
-
-        html += `
-
-        <div class="empty">
-            暂无记录
-        </div>
-
-        `;
-    }
-
-
-    list.innerHTML =
-        html;
-
-
-    statistics(data);
+    `).join("");
 }
 
-
-/* ==========================
-   删除单条记录
-========================== */
-
-function deleteOne(index) {
-
-    const data =
-        getData();
-
-
-    index =
-        Number(index);
-
-
-    if (
-        !Number.isInteger(index) ||
-        index < 0 ||
-        index >= data.length
-    ) {
-
-        alert(
-            "没有找到这条记录，请刷新页面后再试。"
-        );
-
-        return;
-    }
-
-
-    const target =
-        data[index];
-
-
-    const confirmDelete =
-        confirm(
-
-            "确定要删除这条记录吗？\n\n" +
-
-            (target.date || "") +
-            " " +
-            (target.time || "") +
-            "\n" +
-
-            (target.type || "") +
-            " · " +
-            (target.method || "") +
-            "\n" +
-
-            "¥" +
-            Number(
-                target.money || 0
-            ).toFixed(2)
-
-        );
-
-
-    if (!confirmDelete) {
-        return;
-    }
-
-
-    /*
-       直接按照数组位置删除
-    */
-
-    data.splice(
-        index,
-        1
-    );
-
-
-    saveAllData(data);
-
-
-    show();
-}
-
-
-/* ==========================
-   全选
-========================== */
-
-function toggleSelectAll(checkbox) {
-
-    const boxes =
-        document.querySelectorAll(
-            ".record-checkbox"
-        );
-
-
-    boxes.forEach(
-        function(box) {
-
-            box.checked =
-                checkbox.checked;
-
-        }
-    );
-}
-
-
-/* ==========================
-   删除选中
-========================== */
-
-function deleteSelected() {
-
-    const checkedBoxes =
-        document.querySelectorAll(
-            ".record-checkbox:checked"
-        );
-
-
-    if (
-        checkedBoxes.length === 0
-    ) {
-
-        alert(
-            "请先选择要删除的记录"
-        );
-
-        return;
-    }
-
-
-    const confirmDelete =
-        confirm(
-
-            "确定要删除选中的 " +
-            checkedBoxes.length +
-            " 条记录吗？"
-
-        );
-
-
-    if (!confirmDelete) {
-        return;
-    }
-
-
-    /*
-       取得所有被选中的数组位置
-    */
-
-    const indexes = [];
-
-
-    checkedBoxes.forEach(
-        function(box) {
-
-            indexes.push(
-                Number(
-                    box.getAttribute(
-                        "data-index"
-                    )
-                )
-            );
-
-        }
-    );
-
-
-    /*
-       从大到小删除。
-       这样删除前面的记录时，
-       不会影响后面的 index。
-    */
-
-    indexes.sort(
-        function(a, b) {
-            return b - a;
-        }
-    );
-
-
-    const data =
-        getData();
-
-
-    indexes.forEach(
-        function(index) {
-
-            if (
-                index >= 0 &&
-                index < data.length
-            ) {
-
-                data.splice(
-                    index,
-                    1
-                );
-            }
-
-        }
-    );
-
-
-    saveAllData(data);
-
-
-    show();
-}
-
-
-/* ==========================
-   周 / 月统计
-========================== */
-
-function statistics(data) {
-
-    const now =
-        getBeijingTime();
-
-
-    let week = 0;
-
-    let month = 0;
-
-
-    const currentDay =
-        now.getDay();
-
-
-    const mondayOffset =
-        currentDay === 0
-            ? 6
-            : currentDay - 1;
-
-
-    const monday =
-        new Date(
-
-            now.getFullYear(),
-
-            now.getMonth(),
-
-            now.getDate() -
-            mondayOffset
-
-        );
-
-
-    monday.setHours(
-        0,
-        0,
-        0,
-        0
-    );
-
-
-    data.forEach(
-        function(item) {
-
-            if (!item.date) {
-                return;
-            }
-
-
-            const arr =
-                item.date.split("-");
-
-
-            if (arr.length !== 3) {
-                return;
-            }
-
-
-            const recordDate =
-                new Date(
-
-                    Number(arr[0]),
-
-                    Number(arr[1]) - 1,
-
-                    Number(arr[2])
-
-                );
-
-
-            recordDate.setHours(
-                0,
-                0,
-                0,
-                0
-            );
-
-
-            const money =
-                Number(item.money) || 0;
-
-
-            /* 本月 */
-
-            if (
-
-                recordDate.getFullYear()
-                ===
-                now.getFullYear()
-
-                &&
-
-                recordDate.getMonth()
-                ===
-                now.getMonth()
-
-            ) {
-
-                month += money;
-            }
-
-
-            /* 本周 */
-
-            if (
-
-                recordDate >= monday
-
-                &&
-
-                recordDate <= now
-
-            ) {
-
-                week += money;
-            }
-
-        }
-    );
-
-
-    const weekBox =
-        document.getElementById(
-            "weekTotal"
-        );
-
-
-    const monthBox =
-        document.getElementById(
-            "monthTotal"
-        );
-
-
-    if (weekBox) {
-
-        weekBox.innerHTML =
-            "本周交通费用：¥" +
-            week.toFixed(2);
-    }
-
-
-    if (monthBox) {
-
-        monthBox.innerHTML =
-            "本月交通费用：¥" +
-            month.toFixed(2);
-    }
-}
-
-
-/* ==========================
-   页面启动
-========================== */
-
-show();
+render();
